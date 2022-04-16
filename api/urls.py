@@ -11,5 +11,7 @@ urlpatterns = [
     path('get-taxi/', taxi_views.get_taxi),
     path('set-taxi-loc/', taxi_views.taxi_set_location),
     path('order-taxi/', taxi_views.order_taxi),
-
+    path('accept-order/', taxi_views.accept_order),
+    path('cancel-order/', taxi_views.cancel_order),
+    path('get-price/', taxi_views.get_price),
 ]

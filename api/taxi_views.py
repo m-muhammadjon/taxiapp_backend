@@ -6,8 +6,10 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import status
 
-from taxi.models import Driver, Location, Order
+from account.models import User
+from taxi.models import Driver, Location, Order, CarType, OrderNotificationDriver
 
 from .taxi_serializer import DriverSerializer, OrderCreateSerializer, OrderSerializer
 
@@ -25,6 +27,7 @@ def order_send(order_id, driver_ids):
     order = Order.objects.get(id=order_id)
     order_serializer = OrderSerializer(order, many=False)
     layer = get_channel_layer()
+    obj, created = OrderNotificationDriver.objects.get_or_create(order_id=order_id)
     for id in driver_ids:
         async_to_sync(layer.group_send)(
             f'user_{id}', {
@@ -33,6 +36,8 @@ def order_send(order_id, driver_ids):
                 'order': order_serializer.data
             }
         )
+        user = User.objects.get(id=id)
+        obj.users.add(user)
 
 
 @api_view(['GET'])
@@ -72,5 +77,66 @@ def order_taxi(request):
 @api_view(['GET'])
 def get_price(request):
     print(request.data)
+    pnt1 = Point(float(request.data.get('lng1')), float(request.data.get('lat1')))
+    pnt2 = Point(float(request.data.get('lng2')), float(request.data.get('lat2')))
+    distance = pnt1.distance(pnt2) * 100
+    print(distance)
+    types = CarType.objects.all()
+    res = dict()
+    for t in types:
+        res[t.name] = int(t.price * distance)
 
+    return Response(res, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def accept_order(request):
+    order = Order.objects.get(id=request.data.get('order_id'))
+    order.driver = request.user.driver
+    order.save()
+    nt = OrderNotificationDriver.objects.get(order=order)
+    nt.users.remove(request.user)
+    nt_user_ids = [x.id for x in nt.users.all()]
+    print(nt_user_ids)
+    order_serializer = OrderSerializer(order, many=False)
+    driver_serializer = DriverSerializer(order.driver, many=False)
+    layer = get_channel_layer()
+    async_to_sync(layer.group_send)(
+        f'user_{order.rider.id}', {
+            'type': 'order_message',
+            'status': 'accepted',
+            'driver': driver_serializer.data
+        }
+    )
+    for id in nt_user_ids:
+        async_to_sync(layer.group_send)(
+            f'user_{id}', {
+                'type': 'order_message',
+                'status': 'order_remove',
+                'order': order_serializer.data
+            }
+        )
+
+    return Response('salom')
+
+
+@api_view(['POST'])
+def cancel_order(request):
+    order = Order.objects.get(id=request.data.get('order_id'))
+    nt_order = OrderNotificationDriver.objects.get(order=order)
+    nt_order_ids = [x.id for x in nt_order.users.all()]
+    order.cancellation_reason = request.data.get('cancellation_reason')
+    order.status = 'cancelled'
+    order.save()
+    order_serializer = OrderSerializer(order, many=False)
+    layer = get_channel_layer()
+    for id in nt_order_ids:
+        async_to_sync(layer.group_send)(
+            f'user_{id}', {
+                'type': 'order_message',
+                'status': 'order_remove',
+                'order': order_serializer.data
+            }
+        )
     return Response('salom')
