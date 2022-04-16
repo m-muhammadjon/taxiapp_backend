@@ -1,0 +1,78 @@
+[
+{
+    "model": "account.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$7srLBXWwuOv8YvJE9pJrlI$N//NLsb8AVSxQv8ikQEEaxCzmTjDvQ31D8bRoCqBNzk=",
+        "last_login": "2022-04-09T10:13:53.416Z",
+        "email": "muhammadjon.200415@gmail.com",
+        "username": null,
+        "date_joined": "2022-04-09T10:13:36.997Z",
+        "is_active": true,
+        "is_admin": true,
+        "is_staff": true,
+        "is_superuser": true,
+        "fullname": "Muhammadjon Muhamedov",
+        "is_verified": false,
+        "phone_number": "+998935961151",
+        "image": ""
+    }
+},
+{
+    "model": "account.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$tmYzpfG3qMlp4Jy2JtUvV8$1+A5AeTYS+kzni9KtBOeiu5s53lIwqfpHScimfrfYs8=",
+        "last_login": null,
+        "email": "test@gmail.com",
+        "username": null,
+        "date_joined": "2022-04-09T10:14:05.550Z",
+        "is_active": false,
+        "is_admin": false,
+        "is_staff": false,
+        "is_superuser": false,
+        "fullname": "Test Tester",
+        "is_verified": false,
+        "phone_number": "+998931231212",
+        "image": ""
+    }
+},
+{
+    "model": "account.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$XG7uOLQIBhSSMd1R3LLqYS$WGYHviMcLrWtWXGCAD6qcCcEavrbLhLG7Ims2GJ2R1o=",
+        "last_login": null,
+        "email": "Alijon@gmail.com",
+        "username": null,
+        "date_joined": "2022-04-09T10:14:39.333Z",
+        "is_active": false,
+        "is_admin": false,
+        "is_staff": false,
+        "is_superuser": false,
+        "fullname": "Alijon Valiyev",
+        "is_verified": false,
+        "phone_number": "+998935557788",
+        "image": ""
+    }
+},
+{
+    "model": "account.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$wm9hpuoTtumHiVAC6EZWt6$UZikpsTSeZGKHVvlMn3tO03ZKIuPmvFmkJv/bqZmh/M=",
+        "last_login": null,
+        "email": "sardor@gmail.com",
+        "username": null,
+        "date_joined": "2022-04-09T10:15:07.500Z",
+        "is_active": false,
+        "is_admin": false,
+        "is_staff": false,
+        "is_superuser": false,
+        "fullname": "Sardor Sardorov",
+        "is_verified": false,
+        "phone_number": "+998935557788",
+        "image": ""
+    }
+}
+]

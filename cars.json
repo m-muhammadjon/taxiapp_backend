@@ -1,0 +1,30 @@
+[
+{
+    "model": "taxi.car",
+    "pk": 1,
+    "fields": {
+        "name": "Nexia 3"
+    }
+},
+{
+    "model": "taxi.car",
+    "pk": 2,
+    "fields": {
+        "name": "Gentra"
+    }
+},
+{
+    "model": "taxi.car",
+    "pk": 3,
+    "fields": {
+        "name": "Spark"
+    }
+},
+{
+    "model": "taxi.car",
+    "pk": 4,
+    "fields": {
+        "name": "Malibu"
+    }
+}
+]

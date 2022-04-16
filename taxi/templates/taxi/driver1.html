@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>driver2</title>
+</head>
+<body>
+<script>
+    const chatSocket = new WebSocket(
+        'ws://'
+        + '127.0.0.1:8000'
+        + '/ws/user/2/'
+    );
+
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        console.log(data);
+
+    };
+
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+</script>
+</body>
+</html>
