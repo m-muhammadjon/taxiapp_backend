@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from taxi.models import Order, Driver
 
-from .account_serializer import UserItemSerializer, UserSerializer
+from .account_serializer import UserItemSerializer
 
 
 class DriverSerializer(serializers.ModelSerializer):

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.gis import admin as geo_admin
 
-from .models import Car, Driver, Order, Location, CarType, OrderNotificationDriver
+from .models import Car, Driver, Order, Location, CarType, OrderNotificationDriver, CancellationReason, SMSToken
 
 
 @admin.register(Car)
@@ -17,6 +17,8 @@ class DriverAdmin(geo_admin.OSMGeoAdmin):
 
 admin.site.register(CarType)
 admin.site.register(OrderNotificationDriver)
+admin.site.register(CancellationReason)
+admin.site.register(SMSToken)
 
 
 @admin.register(Order)

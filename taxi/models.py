@@ -83,9 +83,27 @@ class Order(models.Model):
     started = models.DateTimeField(null=True, blank=True)  # Taxi yo'lovchini olgan vaqt
     ended = models.DateTimeField(null=True, blank=True)  # Manzilga kelgan vaqt
     penalty_price = models.PositiveIntegerField(null=True, blank=True)
-    cancellation_reason = models.CharField(max_length=100, null=True)
+    cancellation_reason = models.ForeignKey('CancellationReason',
+                                            on_delete=models.SET_NULL,
+                                            related_name='orders',
+                                            null=True, blank=True)
+    # cancellation_reason = models.CharField(max_length=200, null=True)
 
 
 class OrderNotificationDriver(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     users = models.ManyToManyField(User, null=True, blank=True)
+
+
+class CancellationReason(models.Model):
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title
+
+
+class SMSToken(models.Model):
+    token = models.TextField()
+
+    def __str__(self):
+        return self.token

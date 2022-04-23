@@ -126,7 +126,7 @@ def cancel_order(request):
     order = Order.objects.get(id=request.data.get('order_id'))
     nt_order = OrderNotificationDriver.objects.get(order=order)
     nt_order_ids = [x.id for x in nt_order.users.all()]
-    order.cancellation_reason = request.data.get('cancellation_reason')
+    order.cancellation_reason_id = int(request.data.get('cancellation_reason'))
     order.status = 'cancelled'
     order.save()
     order_serializer = OrderSerializer(order, many=False)

@@ -1,10 +1,16 @@
+import json
+import random
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
 from rest_framework import status
+import requests
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
+
+from taxi.models import SMSToken
 
 from .account_serializer import UserSerializer, UserUpdateSerializer, UserPasswordUpdateSerializer
 
@@ -90,3 +96,38 @@ def update_password(request):
             return Response({'status': 'error', 'message': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
     print(serializer.errors)
     return Response({'status': 'error', 'message': 'Validation error'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+def sms_code_send(num):
+    url = "http://notify.eskiz.uz/api/message/sms/send"
+    code = random.randint(1000, 9999)
+    payload = {'mobile_phone': f"{num}",
+               'message': f'Tasdiqlash kodi {code}',
+               'from': '4546'}
+    headers = {
+        'Authorization': f'Bearer {SMSToken.objects.first().token}'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return response.status_code, code
+
+
+@api_view(['POST'])
+def send_code(request):
+    st_code, code = sms_code_send(request.data.get('phone_number'))
+    print(st_code)
+    while not st_code == 200:
+        print('while')
+        url = "http://notify.eskiz.uz/api/auth/login"
+
+        payload = {'email': 'test@eskiz.uz',
+                   'password': 'j6DWtQjjpLDNjWEk74Sx'}
+
+        response = requests.request("POST", url, data=payload)
+        token = json.loads(response.text)['data']['token']
+        token_obj = SMSToken.objects.first()
+        token_obj.token = token
+        token_obj.save()
+
+        st_code, code = sms_code_send(request.data.get('phone_number'))
+    return Response({'code': code})
